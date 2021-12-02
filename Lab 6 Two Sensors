@@ -1,0 +1,44 @@
+#include <msp430g2553.h>
+volatile long temp, tempRaw, photoRaw;
+void reset();
+void temperature();
+void light();
+void main(void)
+{
+    WDTCTL = WDTPW + WDTHOLD;
+    _delay_cycles(5);
+    while(1){
+
+        reset();
+        temperature();
+        _delay_cycles(100);
+        tempRaw = ADC10MEM;
+        temp = (((tempRaw-673)*423)/1024);
+
+        reset();
+        light();
+        _delay_cycles(100);
+        photoRaw = ADC10MEM;
+    }
+}
+
+
+void temperature(){
+     ADC10CTL1 = INCH_10 + ADC10DIV_0 + CONSEQ_2;
+     ADC10CTL0 = SREF_1 | ADC10SHT_3 | REFON | ADC10ON;
+     ADC10CTL0 |= ENC + ADC10SC +MSC;
+}
+
+void light(){
+     ADC10CTL1 = INCH_6 + ADC10DIV_0 + CONSEQ_2;
+     ADC10CTL0 = SREF_1 | ADC10SHT_3 | REFON | ADC10ON ;
+     ADC10CTL0 |= ENC + ADC10SC +MSC;
+}
+
+void reset(){
+    ADC10CTL0 &= ~ADC10IFG;//CLEAR FLAG
+    ADC10MEM=0x00000000;
+    ADC10AE0=0x00;
+    ADC10CTL0=0x0000;
+    ADC10CTL1=0x0000;
+}
