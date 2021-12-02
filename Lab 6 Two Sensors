@@ -24,7 +24,7 @@ void main(void)
 
 
 void temperature(){
-     ADC10CTL1 = INCH_10 + ADC10DIV_0 + CONSEQ_2;
+     ADC10CTL1 = INCH_4 + ADC10DIV_0 + CONSEQ_2;
      ADC10CTL0 = SREF_1 | ADC10SHT_3 | REFON | ADC10ON;
      ADC10CTL0 |= ENC + ADC10SC +MSC;
 }
